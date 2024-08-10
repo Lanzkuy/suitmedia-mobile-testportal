@@ -24,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lans.do_test_question.R
@@ -84,35 +86,51 @@ fun ThirdScreen(
             }
         )
         HorizontalDivider(thickness = 1.dp)
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            state = userListState,
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            items(userList) { user ->
-                UserItem(
-                    avatar = user.avatar,
-                    name = "${user.firstName} ${user.lastName}",
-                    email = user.email,
-                    onClick = {
-                        navigateBack.invoke(user)
-                    }
-                )
-            }
+        if (userList.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                state = userListState,
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                items(userList) { user ->
+                    UserItem(
+                        avatar = user.avatar,
+                        name = "${user.firstName} ${user.lastName}",
+                        email = user.email,
+                        onClick = {
+                            navigateBack.invoke(user)
+                        }
+                    )
+                }
 
-            item {
-                if (state.isLoading) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                item {
+                    if (state.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Empty",
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
